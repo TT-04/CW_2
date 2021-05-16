@@ -2,13 +2,17 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <stdlib.h>
+#define StrSize 13
 
 int main(int argc, char** argv) {
     if(argc < 2) {
         perror("Enter file name\n");
         return 1;
     }
-    char FileName[strlen(argv[1]) + 1];
+    char *FileName;
+  	
+  	FileName = (char*) malloc((strlen(argv[1]) + 1) * sizeof(char) );
 
     for(int i = 0; i < strlen(argv[1]); i++){
         FileName[i] = argv[1][i];
@@ -16,14 +20,14 @@ int main(int argc, char** argv) {
     FileName[strlen(argv[1])] = '\0';
     printf("%s", FileName);
     size_t fd = open(FileName, O_RDWR);
-    char buf[13] = "";
+    char buf[StrSize] = "";
 
     for(int i = 0;; i++) {
         lseek(fd, i, SEEK_SET);
         if (!read(fd, &buf, sizeof(buf))) {
             break;
         }
-        buf[13] = '\0';
+        buf[StrSize-1] = '\0';
         if (strcmp(buf, "Hello world!") == 0) {
             lseek(fd, i, SEEK_SET);
             sprintf(buf, "Sapere aude!");
@@ -31,6 +35,9 @@ int main(int argc, char** argv) {
             break;
         }
     }
+  	
+  	free(FileName);
+  	close(fd);
 
     return 0;
 }
