@@ -1,1 +1,1 @@
-# Zadachi-4-and-6
+Tasks 2,4,6
